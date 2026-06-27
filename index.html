@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,viewport-fit=cover">
+<title>Spot the AI</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="0.9em" font-size="90">🤖</text></svg>'>
+<style>
+ :root{color-scheme:dark}
+ *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+ html,body{margin:0;height:100%;background:#0d0f13;color:#eceef2;font:16px/1.45 system-ui,-apple-system,sans-serif}
+ #app{height:100%;display:flex;flex-direction:column}
+ .screen{flex:1;display:none;flex-direction:column;min-height:0}
+ .screen.on{display:flex}
+ /* ---- start ---- */
+ #start{align-items:center;justify-content:center;text-align:center;gap:18px;padding:24px}
+ .logo{font-size:clamp(30px,9vw,56px);font-weight:800;letter-spacing:.04em}
+ .logo .ai{color:#5b8cff}
+ .sub{color:#aab0bb;font-size:15px}
+ .big{font:inherit;font-weight:700;font-size:20px;padding:16px 40px;border:none;border-radius:14px;background:#5b8cff;color:#06122e;cursor:pointer}
+ .big:active{transform:scale(.97)}
+ .note{position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#5b6270;font-size:11px}
+ /* ---- play ---- */
+ #play{padding:0}
+ #bar{height:5px;background:#1b2030}#fill{height:100%;width:0;background:#5b8cff;transition:width .2s}
+ .topline{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font-size:14px;color:#aab0bb}
+ .q{font-weight:700;color:#eceef2}
+ .prompt{text-align:center;font-size:clamp(18px,5vw,24px);font-weight:700;padding:2px 0 8px}
+ .prompt .ai{color:#5b8cff}
+ #pair{flex:1;display:flex;gap:10px;padding:0 10px 10px;min-height:0}
+ .card{flex:1;min-width:0;background:#15181f;border:3px solid #232838;border-radius:14px;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:border-color .12s,transform .12s}
+ .card:active{transform:scale(.985)}
+ @media(hover:hover) and (pointer:fine){.card:hover{border-color:#3a4a66}}
+ .card img{width:100%;height:100%;object-fit:contain;background:#000;pointer-events:none}
+ .tag{position:absolute;top:8px;left:8px;background:#0009;border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#cdd3de}
+ /* ---- result ---- */
+ #result{padding:18px;overflow:auto;align-items:center;gap:6px}
+ .scoreLbl{color:#aab0bb;letter-spacing:.2em;font-size:13px;margin-top:6px}
+ .score{font-size:clamp(40px,14vw,72px);font-weight:800}
+ .grid{width:100%;max-width:560px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 70px}
+ .rev{background:#15181f;border:1px solid #232838;border-radius:10px;padding:6px;display:flex;gap:6px;align-items:center}
+ .rev img{width:46px;height:46px;object-fit:cover;border-radius:6px}
+ .rev .mk{font-size:18px;margin-left:auto;font-weight:800}
+ .ok{color:#49d18b}.no{color:#ff6b6b}
+ .actions{position:fixed;bottom:0;left:0;right:0;padding:12px;display:flex;gap:10px;justify-content:center;background:#0d0f13ee;backdrop-filter:blur(6px)}
+ .actions button{font:inherit;font-weight:700;padding:13px 26px;border-radius:12px;border:1px solid #333a4a;background:#243447;color:#fff;cursor:pointer}
+ .hidden{display:none!important}
+</style></head>
+<body><div id="app">
+
+ <section id="start" class="screen on">
+   <div class="logo">SPOT THE <span class="ai">AI</span> 🤖</div>
+   <div class="sub">Which is AI? &nbsp;·&nbsp; 10 ×</div>
+   <button class="big" onclick="Game.start()">▶ START</button>
+   <div class="note">anonymous results are logged for a perception study · v1</div>
+ </section>
+
+ <section id="play" class="screen">
+   <div id="bar"><div id="fill"></div></div>
+   <div class="topline"><span class="q" id="qnum">1 / 10</span><span>🤖 = AI</span></div>
+   <div class="prompt">Which is <span class="ai">AI</span>?</div>
+   <div id="pair">
+     <div class="card" id="cardL" onclick="Game.pick('L')"><div class="tag" id="tagL">A</div><img id="imgL"></div>
+     <div class="card" id="cardR" onclick="Game.pick('R')"><div class="tag" id="tagR">B</div><img id="imgR"></div>
+   </div>
+ </section>
+
+ <section id="result" class="screen">
+   <div class="scoreLbl">SCORE</div>
+   <div class="score"><span id="sc">0</span> / <span id="scN">10</span></div>
+   <div class="sub" id="blurb"></div>
+   <div class="grid" id="reveal"></div>
+   <div class="actions">
+     <button onclick="Game.start()">↻ AGAIN</button>
+     <button onclick="Game.share()">⤴ SHARE</button>
+   </div>
+ </section>
+
+</div>
+<script>
+const CONFIG = {
+  ENDPOINT: "",          // <-- data sink URL goes here (set after backend chosen)
+  N: 10,
+  VERSION: "1"
+};
+
+// ---- player identity (per browser); first play only is used for analysis ----
+function pid(){ let p=localStorage.getItem('aiq_pid'); if(!p){p=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem('aiq_pid',p);} return p; }
+function nextPlayNo(){ const n=(+localStorage.getItem('aiq_plays')||0)+1; localStorage.setItem('aiq_plays',n); return n; }
+
+const Game = {
+  pool:[], quiz:[], idx:0, answers:[], t0:0, aiSide:'L', playNo:0,
+
+  async load(){ if(this.pool.length) return; this.pool = await (await fetch('pairs.json?v='+CONFIG.VERSION)).json(); },
+
+  pickQuiz(){
+    const p=[...this.pool]; for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]];}
+    const used=new Set(), q=[];
+    for(const pr of p){
+      const keys=[pr.ai, pr.real, 'base:'+pr.aibase];           // no image AND no shared base (incl. edited versions)
+      if(keys.some(k=>used.has(k))) continue;
+      keys.forEach(k=>used.add(k)); q.push(pr);
+      if(q.length>=CONFIG.N) break;
+    }
+    q.sort((a,b)=>a.difficulty-b.difficulty);                   // easiest first
+    return q;
+  },
+
+  async start(){
+    await this.load();
+    this.quiz=this.pickQuiz(); this.idx=0; this.answers=[];
+    show('play'); this.render();
+  },
+
+  render(){
+    const pr=this.quiz[this.idx];
+    this.aiSide = Math.random()<0.5 ? 'L':'R';
+    const L = this.aiSide==='L'?pr.ai:pr.real, R = this.aiSide==='L'?pr.real:pr.ai;
+    imgEl('imgL').src=L; imgEl('imgR').src=R;
+    document.getElementById('qnum').textContent=(this.idx+1)+' / '+this.quiz.length;
+    document.getElementById('fill').style.width=(100*this.idx/this.quiz.length)+'%';
+    this.t0=performance.now();
+  },
+
+  pick(side){
+    const pr=this.quiz[this.idx];
+    const correct = side===this.aiSide;
+    this.answers.push({id:pr.id, cell:pr.cell, correct, rt:Math.round(performance.now()-this.t0), aiSide:this.aiSide, pick:side});
+    this.idx++;
+    if(this.idx>=this.quiz.length) this.finish(); else this.render();
+  },
+
+  finish(){
+    const sc=this.answers.filter(a=>a.correct).length;
+    document.getElementById('fill').style.width='100%';
+    document.getElementById('sc').textContent=sc;
+    document.getElementById('scN').textContent=this.quiz.length;
+    document.getElementById('blurb').textContent =
+      sc>=9?'sharp eye 👁':' '+(sc>=6?'not bad':'the AI fooled you 🤖');
+    const g=document.getElementById('reveal'); g.innerHTML='';
+    this.quiz.forEach((pr,i)=>{
+      const a=this.answers[i]; const d=document.createElement('div'); d.className='rev';
+      d.innerHTML=`<img src="${pr.ai}"><span class="mk ${a.correct?'ok':'no'}">${a.correct?'✓':'✗'}</span>`;
+      g.appendChild(d);
+    });
+    this.playNo=nextPlayNo();
+    this.send(sc);
+    show('result');
+  },
+
+  send(sc){
+    const payload={pid:pid(), play:this.playNo, ts:Date.now(), v:CONFIG.VERSION, score:sc,
+                   lang:navigator.language, ua:(navigator.userAgent||'').slice(0,140), answers:this.answers};
+    try{ const log=JSON.parse(localStorage.getItem('aiq_log')||'[]'); log.push(payload); localStorage.setItem('aiq_log',JSON.stringify(log.slice(-50))); }catch(e){}
+    if(CONFIG.ENDPOINT){
+      try{ fetch(CONFIG.ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}); }catch(e){}
+    }
+  },
+
+  share(){
+    const sc=this.answers.filter(a=>a.correct).length;
+    const t='Spot the AI 🤖  '+sc+'/'+this.quiz.length+'  '+location.href;
+    if(navigator.share) navigator.share({text:t}).catch(()=>{});
+    else { navigator.clipboard?.writeText(t); }
+  }
+};
+function imgEl(id){return document.getElementById(id);}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+</script>
+</body></html>

@@ -1,0 +1,254 @@
+[
+ {
+  "id": "q000",
+  "ai": "img/ai_P_tHi.jpg",
+  "real": "img/real_Pa.jpg",
+  "aibase": "P/tHi",
+  "difficulty": 0.15,
+  "cell": "easy",
+  "content": "P"
+ },
+ {
+  "id": "q001",
+  "ai": "img/ai_P_tMid.jpg",
+  "real": "img/real_Pb.jpg",
+  "aibase": "P/tMid",
+  "difficulty": 0.5,
+  "cell": "H1mid",
+  "content": "P"
+ },
+ {
+  "id": "q002",
+  "ai": "img/ai_P_tLo.jpg",
+  "real": "img/real_Pc.jpg",
+  "aibase": "P/tLo",
+  "difficulty": 0.75,
+  "cell": "H1",
+  "content": "P"
+ },
+ {
+  "id": "q003",
+  "ai": "img/ai_P_cLo.jpg",
+  "real": "img/draw_P.jpg",
+  "aibase": "P/cLo",
+  "difficulty": 0.82,
+  "cell": "H2",
+  "content": "P"
+ },
+ {
+  "id": "q004",
+  "ai": "img/ai_P_tHi.jpg",
+  "real": "img/art_portrait_0.jpg",
+  "aibase": "P/tHi",
+  "difficulty": 0.4,
+  "cell": "easyArt",
+  "content": "P"
+ },
+ {
+  "id": "q005",
+  "ai": "img/ai_P_gArt.jpg",
+  "real": "img/art_portrait_1.jpg",
+  "aibase": "P/tHi",
+  "difficulty": 0.45,
+  "cell": "attr",
+  "content": "P"
+ },
+ {
+  "id": "q006",
+  "ai": "img/ai_P_tLo.jpg",
+  "real": "img/real_Pc.jpg",
+  "aibase": "P/tLo",
+  "difficulty": 0.7,
+  "cell": "trapReal",
+  "content": "P"
+ },
+ {
+  "id": "q007",
+  "ai": "img/ai_L_tHi.jpg",
+  "real": "img/real_La.jpg",
+  "aibase": "L/tHi",
+  "difficulty": 0.15,
+  "cell": "easy",
+  "content": "L"
+ },
+ {
+  "id": "q008",
+  "ai": "img/ai_L_tMid.jpg",
+  "real": "img/real_Lb.jpg",
+  "aibase": "L/tMid",
+  "difficulty": 0.5,
+  "cell": "H1mid",
+  "content": "L"
+ },
+ {
+  "id": "q009",
+  "ai": "img/ai_L_tLo.jpg",
+  "real": "img/real_Lc.jpg",
+  "aibase": "L/tLo",
+  "difficulty": 0.75,
+  "cell": "H1",
+  "content": "L"
+ },
+ {
+  "id": "q010",
+  "ai": "img/ai_L_cLo.jpg",
+  "real": "img/draw_L.jpg",
+  "aibase": "L/cLo",
+  "difficulty": 0.82,
+  "cell": "H2",
+  "content": "L"
+ },
+ {
+  "id": "q011",
+  "ai": "img/ai_L_tHi.jpg",
+  "real": "img/art_landscape_0.jpg",
+  "aibase": "L/tHi",
+  "difficulty": 0.4,
+  "cell": "easyArt",
+  "content": "L"
+ },
+ {
+  "id": "q012",
+  "ai": "img/ai_L_gArt.jpg",
+  "real": "img/art_landscape_1.jpg",
+  "aibase": "L/tHi",
+  "difficulty": 0.45,
+  "cell": "attr",
+  "content": "L"
+ },
+ {
+  "id": "q013",
+  "ai": "img/ai_L_tLo.jpg",
+  "real": "img/realhi_L.jpg",
+  "aibase": "L/tLo",
+  "difficulty": 0.7,
+  "cell": "trapReal",
+  "content": "L"
+ },
+ {
+  "id": "q014",
+  "ai": "img/ai_A_tHi.jpg",
+  "real": "img/real_Aa.jpg",
+  "aibase": "A/tHi",
+  "difficulty": 0.15,
+  "cell": "easy",
+  "content": "A"
+ },
+ {
+  "id": "q015",
+  "ai": "img/ai_A_tMid.jpg",
+  "real": "img/real_Ab.jpg",
+  "aibase": "A/tMid",
+  "difficulty": 0.5,
+  "cell": "H1mid",
+  "content": "A"
+ },
+ {
+  "id": "q016",
+  "ai": "img/ai_A_tLo.jpg",
+  "real": "img/real_Ac.jpg",
+  "aibase": "A/tLo",
+  "difficulty": 0.75,
+  "cell": "H1",
+  "content": "A"
+ },
+ {
+  "id": "q017",
+  "ai": "img/ai_A_cLo.jpg",
+  "real": "img/draw_A.jpg",
+  "aibase": "A/cLo",
+  "difficulty": 0.82,
+  "cell": "H2",
+  "content": "A"
+ },
+ {
+  "id": "q018",
+  "ai": "img/ai_A_tHi.jpg",
+  "real": "img/art_animal_0.jpg",
+  "aibase": "A/tHi",
+  "difficulty": 0.4,
+  "cell": "easyArt",
+  "content": "A"
+ },
+ {
+  "id": "q019",
+  "ai": "img/ai_A_gArt.jpg",
+  "real": "img/art_animal_1.jpg",
+  "aibase": "A/tHi",
+  "difficulty": 0.45,
+  "cell": "attr",
+  "content": "A"
+ },
+ {
+  "id": "q020",
+  "ai": "img/ai_A_tLo.jpg",
+  "real": "img/realhi_A.jpg",
+  "aibase": "A/tLo",
+  "difficulty": 0.7,
+  "cell": "trapReal",
+  "content": "A"
+ },
+ {
+  "id": "q021",
+  "ai": "img/ai_S_tHi.jpg",
+  "real": "img/real_Sa.jpg",
+  "aibase": "S/tHi",
+  "difficulty": 0.15,
+  "cell": "easy",
+  "content": "S"
+ },
+ {
+  "id": "q022",
+  "ai": "img/ai_S_tMid.jpg",
+  "real": "img/real_Sb.jpg",
+  "aibase": "S/tMid",
+  "difficulty": 0.5,
+  "cell": "H1mid",
+  "content": "S"
+ },
+ {
+  "id": "q023",
+  "ai": "img/ai_S_tLo.jpg",
+  "real": "img/real_Sc.jpg",
+  "aibase": "S/tLo",
+  "difficulty": 0.75,
+  "cell": "H1",
+  "content": "S"
+ },
+ {
+  "id": "q024",
+  "ai": "img/ai_S_cLo.jpg",
+  "real": "img/draw_S.jpg",
+  "aibase": "S/cLo",
+  "difficulty": 0.82,
+  "cell": "H2",
+  "content": "S"
+ },
+ {
+  "id": "q025",
+  "ai": "img/ai_S_tHi.jpg",
+  "real": "img/art_stilllife_0.jpg",
+  "aibase": "S/tHi",
+  "difficulty": 0.4,
+  "cell": "easyArt",
+  "content": "S"
+ },
+ {
+  "id": "q026",
+  "ai": "img/ai_S_gArt.jpg",
+  "real": "img/art_stilllife_1.jpg",
+  "aibase": "S/tHi",
+  "difficulty": 0.45,
+  "cell": "attr",
+  "content": "S"
+ },
+ {
+  "id": "q027",
+  "ai": "img/ai_S_tLo.jpg",
+  "real": "img/realhi_A.jpg",
+  "aibase": "S/tLo",
+  "difficulty": 0.7,
+  "cell": "trapReal",
+  "content": "S"
+ }
+]
