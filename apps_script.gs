@@ -22,4 +22,11 @@ function doPost(e) {
   return ContentService.createTextOutput('ok');
 }
 
-function doGet() { return ContentService.createTextOutput('alive'); }
+// Returns all rows as JSON so the analyzer can pull data directly (anonymous study; no PII).
+function doGet() {
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('plays');
+  if (!sh) return ContentService.createTextOutput('[]').setMimeType(ContentService.MimeType.JSON);
+  var v = sh.getDataRange().getValues(); var head = v.shift();
+  var out = v.map(function (r) { var o = {}; head.forEach(function (h, i) { o[h] = r[i]; }); return o; });
+  return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
+}
