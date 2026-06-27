@@ -2,7 +2,23 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,viewport-fit=cover">
-<title>Spot the AI</title>
+<title>Spot the AI — can you tell which image is AI-generated?</title>
+<meta name="description" content="A 10-round game: two images, one is AI-generated. Can you spot it? Play free in your browser.">
+<link rel="canonical" href="https://puniu3.github.io/spot-the-ai/">
+<!-- Open Graph / rich link previews -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Spot the AI">
+<meta property="og:title" content="Spot the AI — can you tell which image is AI-generated?">
+<meta property="og:description" content="A 10-round game: two images, one is AI-generated. Can you spot it? Play free in your browser.">
+<meta property="og:url" content="https://puniu3.github.io/spot-the-ai/">
+<meta property="og:image" content="https://puniu3.github.io/spot-the-ai/og.png?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Spot the AI — two images side by side, which one is AI?">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Spot the AI — can you tell which image is AI-generated?">
+<meta name="twitter:description" content="A 10-round game: two images, one is AI-generated. Can you spot it?">
+<meta name="twitter:image" content="https://puniu3.github.io/spot-the-ai/og.png?v=1">
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="0.9em" font-size="90">🤖</text></svg>'>
 <style>
  :root{color-scheme:dark}
@@ -41,8 +57,13 @@
  .rev img{width:46px;height:46px;object-fit:cover;border-radius:6px}
  .rev .mk{font-size:18px;margin-left:auto;font-weight:800}
  .ok{color:#49d18b}.no{color:#ff6b6b}
- .actions{position:fixed;bottom:0;left:0;right:0;padding:12px;display:flex;gap:10px;justify-content:center;background:#0d0f13ee;backdrop-filter:blur(6px)}
- .actions button{font:inherit;font-weight:700;padding:13px 26px;border-radius:12px;border:1px solid #333a4a;background:#243447;color:#fff;cursor:pointer}
+ .actions{position:fixed;bottom:0;left:0;right:0;padding:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:#0d0f13ee;backdrop-filter:blur(6px)}
+ .actions button{font:inherit;font-weight:700;padding:12px 18px;border-radius:12px;border:1px solid #333a4a;background:#243447;color:#fff;cursor:pointer;font-size:15px}
+ .actions button:active{transform:scale(.96)}
+ .actions .x{background:#000;border-color:#000}
+ .actions .line{background:#06c755;border-color:#06c755;color:#062018}
+ #toast{position:fixed;left:50%;bottom:74px;transform:translateX(-50%) translateY(8px);background:#243447;border:1px solid #3a4a66;color:#fff;font-size:14px;font-weight:600;padding:9px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:5}
+ #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
  .hidden{display:none!important}
 </style></head>
 <body><div id="app">
@@ -71,8 +92,11 @@
    <div class="grid" id="reveal"></div>
    <div class="actions">
      <button onclick="Game.start()">↻ AGAIN</button>
-     <button onclick="Game.share()">⤴ SHARE</button>
+     <button class="sh x" onclick="Game.shareTo('x')">𝕏 Post</button>
+     <button class="sh line" onclick="Game.shareTo('line')">LINE</button>
+     <button class="sh copy" onclick="Game.shareTo('copy')">⧉ Copy</button>
    </div>
+   <div id="toast"></div>
  </section>
 
 </div>
@@ -156,14 +180,30 @@ const Game = {
     }
   },
 
-  share(){
+  shareText(){
     const sc=this.answers.filter(a=>a.correct).length;
-    const t='Spot the AI 🤖  '+sc+'/'+this.quiz.length+'  '+location.href;
-    if(navigator.share) navigator.share({text:t}).catch(()=>{});
-    else { navigator.clipboard?.writeText(t); }
+    return 'I scored '+sc+'/'+this.quiz.length+' on Spot the AI 🤖 — can you tell which image is AI-generated?';
+  },
+
+  shareTo(target){
+    const url=location.href.split('#')[0].split('?')[0];
+    const text=this.shareText();
+    if(target==='x'){
+      window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank','noopener');
+    }else if(target==='line'){
+      window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text),'_blank','noopener');
+    }else{ // copy (also offers the native OS share sheet on mobile)
+      const full=text+' '+url;
+      if(navigator.share){ navigator.share({text,url}).catch(()=>{}); return; }
+      const done=()=>toast('Copied!'), fail=()=>toast('Copy failed');
+      if(navigator.clipboard?.writeText) navigator.clipboard.writeText(full).then(done,fail);
+      else fail();
+    }
   }
 };
 function imgEl(id){return document.getElementById(id);}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+let _toastT;
+function toast(msg){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove('show'),1600);}
 </script>
 </body></html>
